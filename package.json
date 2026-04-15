@@ -1,0 +1,42 @@
+{
+  "name": "ninjacoin-mining",
+  "version": "1.0.0",
+  "description": "NinjaCoin Mining Software",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "electron-builder -w"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^9.4.1",
+    "cors": "^2.8.5"
+  },
+  "build": {
+    "appId": "com.ninjacoin.miner",
+    "productName": "NinjaCoin",
+    "win": {
+      "target": "portable",
+      "icon": "public/logo.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraResources": [
+      {
+        "from": "bin",
+        "to": "bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      "keys.json"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^41.2.0",
+    "electron-builder": "^26.8.1"
+  }
+}

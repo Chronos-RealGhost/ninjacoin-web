@@ -1,0 +1,8 @@
+INSTRUÇÕES DO MOTOR NINJACOIN (XMRIG):
+
+1. Baixe o motor oficial em: https://xmrig.com/download
+2. Extraia o arquivo "xmrig.exe".
+3. Cole o "xmrig.exe" dentro desta pasta (bin).
+4. Adicione esta pasta às exclusões do seu antivírus.
+
+O sistema detectará o motor automaticamente ao iniciar.

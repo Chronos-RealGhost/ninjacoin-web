@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NinjaCoin - Painel de Mineração</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=5">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="background-glow">
+        <div class="smoke-cloud"></div>
+        <div class="glow-orb" id="orb1"></div>
+        <div class="glow-orb" id="orb2"></div>
+    </div>
+
+    <main class="container" id="app-content" style="filter: blur(10px); pointer-events: none;">
+        <header class="dashboard-header">
+            <div class="logo">
+                <div class="logo-wrapper">
+                    <img src="logo.png" alt="NinjaCoin" id="main-logo">
+                    <div class="logo-glow"></div>
+                </div>
+                <h1><span class="glitch" data-text="NINJA">Ninja</span><span class="accent">Coin</span></h1>
+            </div>
+            <div id="license-info-header" class="license-status-card" style="display:none;">
+                <div class="license-info-main">
+                    <span class="license-badge" id="license-type-badge">--</span>
+                    <div class="license-timer" id="license-timer-display">
+                        <i data-lucide="clock"></i>
+                        <span id="time-remaining-text">Calculando...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <div class="dot offline" id="status-dot"></div>
+                    <span id="status-text">DESCONECTADO</span>
+                </div>
+                <button id="btn-open-store" class="btn-icon-alt" title="Loja Ninja" style="color: var(--secondary-color); border-color: rgba(69, 243, 255, 0.4); margin-right: 10px;">
+                    <i data-lucide="shopping-cart"></i>
+                </button>
+                <button id="btn-logout" class="btn-icon-alt" title="Sair da Conta">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </header>
+
+        <div id="license-warning-container" style="margin-bottom: 20px;"></div>
+
+        <div class="grid-layout">
+            <!-- Coluna Esquerda: Configuração -->
+            <section class="glass-panel config-panel">
+                <div class="panel-header">
+                    <i data-lucide="fan" class="shuriken-loader"></i>
+                    <h2>Configuração de Alvo</h2>
+                </div>
+                <div class="input-group">
+                    <label for="coin-select">Moeda para Receber (Payout)</label>
+                    <select id="coin-select">
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="USDT">Tether (USDT)</option>
+                        <option value="DOGE">Dogecoin (DOGE)</option>
+                        <option value="XMR">Monero (XMR)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label for="wallet-input" style="margin-bottom: 0;">Endereço da Carteira</label>
+                        <span id="wallet-badge" class="verify-badge">
+                            <i data-lucide="shield-check"></i>
+                            VERIFICADA
+                        </span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="wallet-input" placeholder="Cole o endereço da sua carteira aqui..." autocomplete="off">
+                        <i data-lucide="info" class="input-info-icon" title="O dinheiro irá direto para este endereço via rede Unmineable."></i>
+                    </div>
+                </div>
+
+                <div class="power-control">
+                    <button id="btn-start" class="btn btn-action start">
+                        <i data-lucide="play"></i>
+                        INICIAR MOTOR
+                    </button>
+                    <button id="btn-stop" class="btn btn-action stop" disabled>
+                        <i data-lucide="square"></i>
+                        DESLIGAR
+                    </button>
+                </div>
+                
+                <div id="error-message" class="error-toast" style="display: none;"></div>
+            </section>
+
+            <!-- Coluna Direita: Dashboard Numérico -->
+            <section class="glass-panel metrics-panel">
+                <div class="metric-card main-metric">
+                    <div class="stat-card">
+                        <span>STATUS MOTOR</span>
+                        <h3 id="miner-status">DESLIGADO</h3>
+                    </div>
+                </div>
+
+                <!-- BOTÃO DE DOWNLOAD PREMIUM -->
+                <div style="margin: 20px 0; text-align: center;">
+                    <a href="/ninja-miner.zip" id="btn-download-miner" class="download-card">
+                        <div class="download-icon">📥</div>
+                        <div class="download-text">
+                            <span class="dl-title">DOWNLOAD NINJA MINER</span>
+                            <span class="dl-subtitle">Versão 1.0.4 - Windows x64</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="metric-info">
+                    <i data-lucide="zap"></i>
+                    <h3>Velocidade do Ninja</h3>
+                </div>
+                <div class="metric-value">
+                    <span id="hashrate-val">0.0</span> <span class="metric-unit">H/s</span>
+                </div>
+                <div class="metric-sub">
+                    <span>Eficiência: <span id="efficiency-val">98%</span></span>
+                    <span>Threads: <span id="threads-val">AUTO</span></span>
+                </div>
+
+                <div class="metric-card main-metric highlighted">
+                    <div class="metric-info">
+                        <i data-lucide="wallet"></i>
+                        <h3>Saldo Disponível</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span id="balance-val">0.00000</span> <span class="metric-unit" id="balance-unit">COIN</span>
+                    </div>
+                    <div class="metric-footer">
+                        <div class="sub-info">
+                            <span class="label">Total Pago:</span>
+                            <span id="total-paid-val">0.00</span>
+                        </div>
+                        <div class="sub-info">
+                            <span class="label">Último Pagamento:</span>
+                            <span id="last-paid-val">0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-grid-secondary">
+                    <div class="metric-card small">
+                        <div class="metric-info">
+                            <i data-lucide="thermometer"></i>
+                            <h3>Temperatura</h3>
+                        </div>
+                        <div class="metric-value small">
+                            <span id="temp-val">--</span><span class="unit">°C</span>
+                        </div>
+                    </div>
+                    <div class="metric-card small">
+                        <div class="metric-info">
+                            <i data-lucide="cpu"></i>
+                            <h3>Uso CPU</h3>
+                        </div>
+                        <div class="metric-value small">
+                            <span id="cpu-usage-val">--</span><span class="unit">%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Terminal Inferior -->
+        <section class="glass-panel terminal-panel">
+            <div class="terminal-header">
+                <div class="window-controls">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="terminal-title">TERMINAL DE CONTROLE (XMRig)</span>
+            </div>
+            <div class="terminal-body" id="terminal-body">
+                <div class="log-line system">SISTEMA: Aguardando inicialização do motor...</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Login/Registro Dinâmico -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-content glass-panel" style="position: relative;">
+            <button id="btn-close-modal" class="btn-icon-alt" style="position: absolute; top: 15px; right: 15px; z-index: 100; display: none;">
+                <i data-lucide="x"></i>
+            </button>
+            <div class="modal-header-auth">
+                <img src="logo.png" alt="Logo" class="auth-logo">
+                <h2 id="auth-title">Autenticação</h2>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="tab-login">Entrar</button>
+                    <button class="auth-tab" id="tab-register">Registrar</button>
+                    <button class="auth-tab" id="tab-store" style="color: var(--secondary-color); border: 1px solid rgba(69, 243, 255, 0.3);">
+                        <i data-lucide="shopping-cart" style="width:14px; margin-right:5px;"></i>LOJA
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Aba de Loja (Inicialmente Oculta) -->
+            <div id="store-container" style="display: none; padding: 10px;">
+                <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">Escolha seu plano e ative o poder Ninja instantaneamente.</p>
+                <div class="plans-grid">
+                    <div class="plan-card" onclick="selectPlan('24H', 5)">
+                        <span class="plan-tag">BRONZE</span>
+                        <h4>24 HORAS</h4>
+                        <p class="plan-price">R$ 5,00</p>
+                    </div>
+                    <div class="plan-card" onclick="selectPlan('7D', 20)">
+                        <span class="plan-tag silver">PRATA</span>
+                        <h4>7 DIAS</h4>
+                        <p class="plan-price">R$ 20,00</p>
+                    </div>
+                    <div class="plan-card recommend" onclick="selectPlan('30D', 50)">
+                        <span class="plan-tag gold">OURO</span>
+                        <h4>30 DIAS</h4>
+                        <p class="plan-price">R$ 50,00</p>
+                    </div>
+                    <div class="plan-card" onclick="selectPlan('PERM', 150)">
+                        <span class="plan-tag permanent">NINJA</span>
+                        <h4>VITALÍCIO</h4>
+                        <p class="plan-price">R$ 150,00</p>
+                    </div>
+                </div>
+
+                <!-- Painel de Pagamento Stripe -->
+                <div id="payment-area" style="display: none; margin-top: 25px; border-top: 1px solid var(--border-color); padding-top: 20px; animation: fadeIn 0.5s;">
+                    <div style="text-align: center;">
+                        <i data-lucide="credit-card" style="width: 48px; height: 48px; color: var(--secondary-color); margin-bottom: 10px;"></i>
+                        <p style="font-size: 0.85rem;">Clique no botão abaixo para abrir o checkout seguro.</p>
+                        <a id="stripe-link" href="#" target="_blank" class="btn btn-action start" style="width: 100%; margin-top: 15px; text-decoration: none;">
+                            ABRIR CHECKOUT SEGURO
+                        </a>
+                        <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 10px;">A chave será entregue aqui automaticamente após o pagamento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="auth-form-container">
+                <div class="input-group">
+                    <label>Usuário</label>
+                    <input type="text" id="username-input" placeholder="Seu nome de usuário">
+                </div>
+                
+                <div class="input-group">
+                    <label>Senha</label>
+                    <input type="password" id="password-input" placeholder="••••••••">
+                </div>
+
+                <div id="license-field-group" style="display: none;">
+                    <div class="input-group">
+                        <label>Licença NinjaCoin (Obrigatória)</label>
+                        <input type="text" id="license-input" placeholder="NINJA-XXXX-XXXX-XXXX">
+                    </div>
+                </div>
+                
+                <button id="btn-auth-submit" class="btn btn-action start" style="width: 100%;">VALIDAR ACESSO</button>
+                <p id="auth-hint" style="text-align: center; font-size: 0.8rem; margin-top: 15px; color: var(--text-muted);">
+                    Não tem uma conta? Clique na aba <strong>Registrar</strong> no topo.
+                </p>
+                <div id="login-error" class="error-toast" style="display: none; text-align: center; margin-top: 15px;"></div>
+            </div>
+            
+            <p style="text-align:center; color: var(--text-muted); margin-top: 20px; font-size: 0.8rem;">
+                Proteção NinjaCore. Acesso restrito a detentores de licença.
+            </p>
+        </div>
+    </div>
+
+    <script src="js/app.js?v=5"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

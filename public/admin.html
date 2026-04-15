@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja Dashboard Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #050608;
+            --card-bg: rgba(20, 24, 30, 0.8);
+            --primary: #00ff88;
+            --primary-glow: rgba(0, 255, 136, 0.4);
+            --secondary: #45f3ff;
+            --accent: #ff3366;
+            --lifetime: #ffbd2e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(69, 243, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(0, 255, 136, 0.05) 0%, transparent 40%);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Scanlines Effect */
+        body::after {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.4;
+        }
+
+        .admin-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 20;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        .header i { color: var(--secondary); margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--secondary)); }
+        .header h1 { font-weight: 900; font-size: 1.8rem; letter-spacing: 2px; text-transform: uppercase; }
+        .header span { color: var(--secondary); }
+
+        .auth-field {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-field input {
+            background: none; border: none; color: white; width: 100%; outline: none; font-size: 1rem;
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, var(--secondary), #2288ff);
+            color: white;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(69, 243, 255, 0.4); }
+
+        .gen-area { display: none; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+
+        .key-btn {
+            padding: 20px 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-btn:hover { background: rgba(255,255,255,0.08); transform: translateY(-5px); border-color: rgba(255,255,255,0.2); }
+        
+        .key-btn.active-24h:hover { color: #fff; border-color: #888; }
+        .key-btn.active-7d:hover { color: #fff; border-color: var(--secondary); }
+        .key-btn.active-30d:hover { color: #fff; border-color: var(--accent); }
+        .key-btn.active-life:hover { color: #000; background: var(--lifetime); border-color: var(--lifetime); }
+
+        .label { font-size: 0.7rem; text-transform: uppercase; font-weight: 800; opacity: 0.6; }
+
+        .result-panel {
+            margin-top: 2.5rem;
+            padding: 24px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 2px dashed var(--primary);
+            border-radius: 16px;
+            text-align: center;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { border-color: var(--primary); }
+            50% { border-color: var(--secondary); }
+            100% { border-color: var(--primary); }
+        }
+
+        .key-display {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 12px;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .copy-tag {
+            font-size: 0.75rem;
+            background: var(--primary);
+            color: black;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <div class="header">
+            <i data-lucide="shield-check" size="48"></i>
+            <h1>Ninja<span>Admin</span></h1>
+            <p style="font-size: 0.8rem; color: #667; margin-top: 5px;">AUTHORITY_LEVEL: SHOGUN</p>
+        </div>
+
+        <div id="login-section">
+            <div class="auth-field">
+                <i data-lucide="key-round" size="20"></i>
+                <input type="password" id="admin-pass" placeholder="PASSWORD_REQUIRED">
+            </div>
+            <button class="btn-main" onclick="checkAuth()">ENTRAR NO SISTEMA</button>
+        </div>
+
+        <div id="gen-section" class="gen-area">
+            <div class="grid">
+                <button class="key-btn active-24h" onclick="generateKey('24h')">
+                    <i data-lucide="clock"></i>
+                    <span class="label">Licença 24h</span>
+                </button>
+                <button class="key-btn active-7d" onclick="generateKey('7d')">
+                    <i data-lucide="calendar"></i>
+                    <span class="label">Licença 7 Dias</span>
+                </button>
+                <button class="key-btn active-30d" onclick="generateKey('30d')">
+                    <i data-lucide="zap"></i>
+                    <span class="label">Licença 30 Dias</span>
+                </button>
+                <button class="key-btn active-life" onclick="generateKey('lifetime')">
+                    <i data-lucide="crown"></i>
+                    <span class="label" style="opacity: 1;">VITALÍCIA</span>
+                </button>
+            </div>
+
+            <div id="result-panel" class="result-panel">
+                <span class="label">CHAVE GERADA COM SUCESSO</span>
+                <span id="key-result" class="key-display">NINJA-XXXX-XXXX</span>
+                <span class="copy-tag" onclick="copyKey()">COPIAR AGORA</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function checkAuth() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'ninja123') {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('gen-section').style.display = 'block';
+            } else {
+                alert('ACESSO NEGADO: SENHA INCORRETA');
+            }
+        }
+
+        async function generateKey(type) {
+            const btn = event.currentTarget;
+            btn.style.opacity = '0.5';
+            btn.innerText = 'GERANDO...';
+
+            try {
+                const res = await fetch('/api/admin/generate-key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, adminPass: 'ninja123' })
+                });
+                const data = await res.json();
+                
+                if(data.success) {
+                    document.getElementById('result-panel').style.display = 'block';
+                    document.getElementById('key-result').innerText = data.key;
+                }
+            } catch(e) { alert('Erro na conexão!'); }
+            
+            // Reset button text
+            setTimeout(() => {
+                btn.style.opacity = '1';
+                lucide.createIcons(); // Re-render icons if text was cleared
+            }, 500);
+        }
+
+        function copyKey() {
+            const key = document.getElementById('key-result').innerText;
+            navigator.clipboard.writeText(key);
+            alert('CHAVE COPIADA PARA O PERGAMINHO!');
+        }
+    </script>
+</body>
+</html>
