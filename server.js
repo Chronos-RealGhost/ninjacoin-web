@@ -381,7 +381,7 @@ app.get('/gerar-minha-chave-secreta', async (req, res) => {
 });
 
 // ATIVADOR MANUAL PARA A CHAVE DO MARCOS
-app.get('/ativar-minha-chave-mestre', async (req, res) => {
+app.get('/ativar', async (req, res) => {
     try {
         const keyToActive = "NINJA-MASTER-F10E206E";
         const existing = await Key.findOne({ key: keyToActive });
