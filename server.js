@@ -371,8 +371,9 @@ app.post('/api/admin/generate-key', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+const VERSION = "1.0.9-NINJA-FORCE";
 app.listen(PORT, () => {
-    console.log(`\x1b[32m\x1b[1m[SISTEMA NINJA] OPERANTE EM PORTA ${PORT}\x1b[0m`);
+    console.log(`\x1b[32m\x1b[1m[SISTEMA NINJA] OPERANTE EM PORTA ${PORT} - VERSÃO ${VERSION}\x1b[0m`);
 }).on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
         console.error(`\x1b[31m[ERRO CRÍTICO] A porta ${PORT} já está em uso.\x1b[0m`);
