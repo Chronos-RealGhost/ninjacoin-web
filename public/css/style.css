@@ -997,3 +997,47 @@ body::before {
  0%, 100% { box-shadow: 0 0 10px var(--primary-color); }
  50% { box-shadow: 0 0 25px var(--primary-color); }
 }
+
+/* SEÇÃO DE DOWNLOAD NINJA */
+.ninja-download-container {
+    background: rgba(0, 255, 157, 0.05);
+    border: 1px dashed var(--primary-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.ninja-download-container:hover {
+    background: rgba(0, 255, 157, 0.1);
+    transform: translateY(-2px);
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--primary-color), #45f3ff);
+    color: #000;
+    text-decoration: none;
+    font-weight: 800;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 255, 157, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.download-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 255, 157, 0.6);
+    filter: brightness(1.1);
+}
+
+.download-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-style: italic;
+}
