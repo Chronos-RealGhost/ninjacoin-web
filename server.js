@@ -170,13 +170,10 @@ async function validateKey(key, userIP = null) {
         return { valid: false, reason: 'Licença Expirou.' };
     }
 
-    if (userIP) {
-        if (!k.registeredIP) {
-            k.registeredIP = userIP;
-            await k.save();
-        } /* else if (k.registeredIP !== userIP) {
-            return { valid: false, reason: 'Esta licença já pertence a outro computador.' };
-        } */
+    /* TRAVA DE IP DESATIVADA TEMPORARIAMENTE */
+    if (userIP && !k.registeredIP) {
+        k.registeredIP = userIP;
+        await k.save();
     }
 
     return { valid: true, license: k };
@@ -192,7 +189,7 @@ async function authCheck(req, res, next) {
             minerProcess.kill('SIGINT');
             minerProcess = null;
         }
-        return res.status(403).json({ error: 'Bloqueado por Segurança: ' + check.reason, forceLogout: true });
+        return res.status(403).json({ error: 'NINJA-DEBUG: ' + check.reason, forceLogout: true });
     }
     next();
 }
