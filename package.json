@@ -8,9 +8,9 @@
     "build": "electron-builder -w"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mongoose": "^9.4.1",
-    "cors": "^2.8.5"
+    "mongoose": "^9.4.1"
   },
   "build": {
     "appId": "com.ninjacoin.miner",
