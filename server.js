@@ -174,9 +174,9 @@ async function validateKey(key, userIP = null) {
         if (!k.registeredIP) {
             k.registeredIP = userIP;
             await k.save();
-        } else if (k.registeredIP !== userIP) {
+        } /* else if (k.registeredIP !== userIP) {
             return { valid: false, reason: 'Esta licença já pertence a outro computador.' };
-        }
+        } */
     }
 
     return { valid: true, license: k };
