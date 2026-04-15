@@ -370,14 +370,26 @@ app.post('/api/admin/generate-key', async (req, res) => {
     }
 });
 
-// ROTA SECRETA DE EMERGÊNCIA PARA GERAR CHAVE MESTRE (EXCLUIR DEPOIS!)
+// ROTA SECRETA DE EMERGÊNCIA PARA GERAR CHAVE MESTRE
 app.get('/gerar-minha-chave-secreta', async (req, res) => {
     try {
         const key = await generateKeyInternally('PERM');
-        res.send(`<h1>CHAVE MESTRE GERADA COM SUCESSO!</h1><p>Sua chave é: <strong>${key}</strong></p><p>Copie esta chave e use-a para se registrar agora!</p>`);
+        res.send(`<h1>CHAVE MESTRE GERADA COM SUCESSO!</h1><p>Sua chave é: <strong>${key}</strong></p>`);
     } catch (err) {
-        res.status(500).send("Erro ao gerar chave no servidor: " + err.message);
+        res.status(500).send("Erro: " + err.message);
     }
+});
+
+// ATIVADOR MANUAL PARA A CHAVE DO MARCOS
+app.get('/ativar-minha-chave-mestre', async (req, res) => {
+    try {
+        const keyToActive = "NINJA-MASTER-F10E206E";
+        const existing = await Key.findOne({ key: keyToActive });
+        if (existing) return res.send("<h1>CHAVE JÁ ATIVA!</h1><p>Vá registrar sua conta agora.</p>");
+        
+        await new Key({ key: keyToActive, type: 'PERM', expiresAt: null, registeredIP: null }).save();
+        res.send("<h1>CHAVE ATIVADA!</h1><p>A chave <strong>NINJA-MASTER-F10E206E</strong> agora é válida. Pode se registrar!</p>");
+    } catch (err) { res.status(500).send("Erro: " + err.message); }
 });
 
 const PORT = process.env.PORT || 3000;
